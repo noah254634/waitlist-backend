@@ -7,6 +7,7 @@ import router from './route.js'
 import waitList from './model/waitList.js'
 const server=express()
 const port=process.env.PORT || 3000
+// Keep ALLOWED_ORIGINS in Render updated with deployed frontend origins to avoid CORS blocks.
 const allowedOrigins=process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(",").map(origin => origin.trim()) : []
 const corsOptions = {
   origin: function (origin, callback) {
@@ -14,7 +15,7 @@ const corsOptions = {
     if (!origin) return callback(null, true);
 
     // 2. Check if the origin is in our allowed list
-    if (allowedOrigins.indexOf(origin) !== -1) {
+    if (allowedOrigins.indexOf(origin) !== -1 || origin.startsWith('http://localhost:') || origin.endsWith('.vercel.app')) {
       callback(null, true);
     } else {
       console.error(`CORS Error: Origin ${origin} not allowed`);
